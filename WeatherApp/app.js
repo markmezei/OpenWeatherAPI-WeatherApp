@@ -1,8 +1,11 @@
+const date = document.querySelector("#date");
 const locationName = document.querySelector("#locationName");
 const temp = document.querySelector("#temp");
 const input = document.querySelector("#input");
 const button = document.querySelector("#search");
 const weather = document.querySelector("#weather");
+const forecastDays = document.querySelectorAll(".day");
+const forecastDates = document.querySelectorAll(".date");
 
 const locationIcon = document.createElement("i");
 locationIcon.classList.add("fa-solid", "fa-location-dot");
@@ -14,36 +17,53 @@ const weatherIcon = document.createElement("i");
 const tempSelector = document.createElement("button");
 tempSelector.classList.add("tempSelectorButton");
 
+let dateInterval;
 
-const displayWeather = async () => {
+const display = async () => {
     try{
         const config = {params: {q:input.value, appid: '450c822bc77c325d20d898180b7948ed', units: 'metric'}};
-        const response = await axios.get('https://api.openweathermap.org/data/2.5/weather', config);
-        setData(response.data.name, response.data.sys.country, response.data.main.temp, response.data.weather[0].main, response.data.weather[0].id);
+        const currentWeatherURL = 'https://api.openweathermap.org/data/2.5/weather';
+        const currentWeather = await axios.get(currentWeatherURL, config);
+
+        currentWeatherData(currentWeather.data.name, currentWeather.data.sys.country, currentWeather.data.main.temp, 
+            currentWeather.data.weather[0].main, currentWeather.data.weather[0].id, currentWeather.data.timezone);
+
+        const weatherForecastURL = 'https://api.openweathermap.org/data/2.5/forecast';
+        const weatherForecast = await axios.get(weatherForecastURL, config);
+        console.log(weatherForecast);
+
+        // forecastDates.forEach((date, index) => {
+        //     date.textContent = weatherForecast.data.list.filter(item => item.dt_txt.includes("15:00:00"))[index].dt_txt;
+        // })
+
     }catch(e){
         console.error(e);
         locationName.textContent = e.response.statusText;
         temp.textContent = "";
         weather.textContent = "";
+        date.textContent = "";
     }
 }
 
 
-const setData = (dataName, dataCountry, dataTemp, dataWeather, dataID) => {
-    locationName.textContent = `${dataName}, ${dataCountry}`;
+const currentWeatherData = (responseName, responseCountry, responseTemp, responseWeather, responseID, responseTimezone) => {
+    
+    showDate(responseTimezone);
+
+    locationName.textContent = `${responseName}, ${responseCountry}`;
     locationName.insertAdjacentElement("afterbegin", locationIcon);
     locationName.style.animation = "fadeIn 1s ease-in forwards";
 
-    temp.textContent = `${Math.round(dataTemp) + ' °C'}`;
-    tempCheck(dataTemp);
+    temp.textContent = `${Math.round(responseTemp) + ' °C'}`;
+    tempCheck(responseTemp);
     temp.insertAdjacentElement("afterbegin", tempIcon);
     temp.style.animation = "fadeIn 0.8s ease-in forwards";
 
-    selector(dataTemp);
+    selector(responseTemp);
     temp.insertAdjacentElement("beforeend", tempSelector);
     
-    weather.textContent = dataWeather;
-    weatherCheck(dataID);
+    weather.textContent = responseWeather;
+    weatherCheck(responseID);
     weather.insertAdjacentElement("afterbegin", weatherIcon);
     weather.style.animation = "fadeIn 0.8s ease-in forwards";
 
@@ -51,7 +71,35 @@ const setData = (dataName, dataCountry, dataTemp, dataWeather, dataID) => {
         locationName.style.animation = "";
         temp.style.animation = "";
         weather.style.animation = "";
+        date.style.animation = "";
     }, 1000);
+}
+
+const calculateDate = (timezone) => {
+    return(
+        currentDate = new Date(Date.now() + timezone * 1000)
+    );
+    //timezone*1000: 3600000
+    //Date.now(): 1675100632526
+    //Date.now() + responseTimezone * 1000: 1675104577810
+    //currentDate: Mon Jan 30 2023 19:44:36 GMT+0100 (közép-európai téli idő)
+}
+
+
+const showDate = (timezone) => {
+    clearInterval(dateInterval);
+    date.style.animation = "fadeIn 0.8s ease-in forwards";
+
+    const update = () => {
+        calculateDate(timezone);
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        date.textContent = `${days[currentDate.getDay()-1]}, ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()} | 
+        ${String(currentDate.getHours()-1).padStart(2, "0")}:${String(currentDate.getMinutes()).padStart(2, "0")}:${String(currentDate.getSeconds()).padStart(2, "0")}`;
+    }
+    //the update function executed before the interval, because then it removes 1s delay on the first display
+    update();
+    dateInterval = setInterval(update, 1000);
 }
 
 
@@ -128,11 +176,11 @@ const convertToFahrenheit = (celsius) => {
 }
 
 
-button.addEventListener("click", displayWeather);
+button.addEventListener("click", display);
 
 
 window.addEventListener("keypress", (event) => {
-    (event.code === "Enter") ? displayWeather() : null;
+    (event.code === "Enter") ? display() : null;
 })
 
 
