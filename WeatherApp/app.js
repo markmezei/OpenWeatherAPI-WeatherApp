@@ -94,8 +94,11 @@ const showDate = (timezone) => {
         calculateDate(timezone);
         const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let hours = currentDate.getHours();
+        (hours === 0) ? !hours-- : hours--;
+        
         date.textContent = `${days[currentDate.getDay()-1]}, ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()} | 
-        ${String(currentDate.getHours()-1).padStart(2, "0")}:${String(currentDate.getMinutes()).padStart(2, "0")}:${String(currentDate.getSeconds()).padStart(2, "0")}`;
+        ${String(hours).padStart(2, "0")}:${String(currentDate.getMinutes()).padStart(2, "0")}:${String(currentDate.getSeconds()).padStart(2, "0")}`;
     }
     //the update function executed before the interval, because then it removes 1s delay on the first display
     update();
