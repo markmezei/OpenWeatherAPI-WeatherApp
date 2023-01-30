@@ -1,11 +1,9 @@
-const date = document.querySelector("#date");
+const time = document.querySelector("#time");
 const locationName = document.querySelector("#locationName");
 const temp = document.querySelector("#temp");
 const input = document.querySelector("#input");
 const button = document.querySelector("#search");
 const weather = document.querySelector("#weather");
-const forecastDays = document.querySelectorAll(".day");
-const forecastDates = document.querySelectorAll(".date");
 
 const locationIcon = document.createElement("i");
 locationIcon.classList.add("fa-solid", "fa-location-dot");
@@ -22,19 +20,11 @@ let dateInterval;
 const display = async () => {
     try{
         const config = {params: {q:input.value, appid: '450c822bc77c325d20d898180b7948ed', units: 'metric'}};
-        const currentWeatherURL = 'https://api.openweathermap.org/data/2.5/weather';
-        const currentWeather = await axios.get(currentWeatherURL, config);
+        const url = 'https://api.openweathermap.org/data/2.5/weather';
+        const currentWeather = await axios.get(url, config);
 
         currentWeatherData(currentWeather.data.name, currentWeather.data.sys.country, currentWeather.data.main.temp, 
             currentWeather.data.weather[0].main, currentWeather.data.weather[0].id, currentWeather.data.timezone);
-
-        const weatherForecastURL = 'https://api.openweathermap.org/data/2.5/forecast';
-        const weatherForecast = await axios.get(weatherForecastURL, config);
-        console.log(weatherForecast);
-
-        // forecastDates.forEach((date, index) => {
-        //     date.textContent = weatherForecast.data.list.filter(item => item.dt_txt.includes("15:00:00"))[index].dt_txt;
-        // })
 
     }catch(e){
         console.error(e);
@@ -48,7 +38,7 @@ const display = async () => {
 
 const currentWeatherData = (responseName, responseCountry, responseTemp, responseWeather, responseID, responseTimezone) => {
     
-    showDate(responseTimezone);
+    showTime(responseTimezone);
 
     locationName.textContent = `${responseName}, ${responseCountry}`;
     locationName.insertAdjacentElement("afterbegin", locationIcon);
@@ -68,6 +58,7 @@ const currentWeatherData = (responseName, responseCountry, responseTemp, respons
     weather.style.animation = "fadeIn 0.8s ease-in forwards";
 
     setTimeout(() => {
+        time.style.animation = "";
         locationName.style.animation = "";
         temp.style.animation = "";
         weather.style.animation = "";
@@ -75,30 +66,22 @@ const currentWeatherData = (responseName, responseCountry, responseTemp, respons
     }, 1000);
 }
 
-const calculateDate = (timezone) => {
-    return(
-        currentDate = new Date(Date.now() + timezone * 1000)
-    );
-    //timezone*1000: 3600000
-    //Date.now(): 1675100632526
-    //Date.now() + responseTimezone * 1000: 1675104577810
-    //currentDate: Mon Jan 30 2023 19:44:36 GMT+0100 (közép-európai téli idő)
-}
 
-
-const showDate = (timezone) => {
+const showTime = (timezone) => {
     clearInterval(dateInterval);
-    date.style.animation = "fadeIn 0.8s ease-in forwards";
+    time.style.animation = "fadeIn 0.8s ease-in forwards";
 
     const update = () => {
-        calculateDate(timezone);
-        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        let hours = currentDate.getHours();
-        (hours === 0) ? !hours-- : hours--;
-        
-        date.textContent = `${days[currentDate.getDay()-1]}, ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()} | 
-        ${String(hours).padStart(2, "0")}:${String(currentDate.getMinutes()).padStart(2, "0")}:${String(currentDate.getSeconds()).padStart(2, "0")}`;
+        const currentTime = new Date(Date.now() + (timezone * 1000));
+        //timezone*1000: 3600000
+        //Date.now(): 1675100632526
+        //Date.now() + timezone * 1000: 1675104577810
+        //currentDate: Mon Jan 30 2023 19:44:36 GMT+0100 (közép-európai téli idő)
+        let hours = currentTime.getHours();
+        let minutes = currentTime.getMinutes();
+        let seconds = currentTime.getSeconds();
+        hours = (hours === 0) ? (hours = 23) : hours-1;
+        time.textContent = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
     }
     //the update function executed before the interval, because then it removes 1s delay on the first display
     update();
