@@ -31,7 +31,8 @@ const display = async () => {
         locationName.textContent = e.response.statusText;
         temp.textContent = "";
         weather.textContent = "";
-        date.textContent = "";
+        time.textContent = "";
+        clearInterval(dateInterval);
     }
 }
 
@@ -62,7 +63,6 @@ const currentWeatherData = (responseName, responseCountry, responseTemp, respons
         locationName.style.animation = "";
         temp.style.animation = "";
         weather.style.animation = "";
-        date.style.animation = "";
     }, 1000);
 }
 
@@ -75,8 +75,8 @@ const showTime = (timezone) => {
         const currentTime = new Date(Date.now() + (timezone * 1000));
         //timezone*1000: 3600000
         //Date.now(): 1675100632526
-        //Date.now() + timezone * 1000: 1675104577810
-        //currentDate: Mon Jan 30 2023 19:44:36 GMT+0100 (közép-európai téli idő)
+        //Date.now() + (timezone * 1000): 1675104577810
+        //currentTime: Mon Jan 30 2023 19:44:36 GMT+0100 (közép-európai téli idő)
         let hours = currentTime.getHours();
         let minutes = currentTime.getMinutes();
         let seconds = currentTime.getSeconds();
