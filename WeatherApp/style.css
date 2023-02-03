@@ -77,6 +77,7 @@ body{
     height: 3rem;
     font-size: 1.7rem;
     padding-left: .55rem;
+    transition: all 0.7s ease-in-out;
 }
 
 #input:focus{
@@ -113,6 +114,7 @@ body{
 }
 
 .display h1{
+    font-size: 2rem;
     margin-bottom: 1.5rem;
     color: var(--white);
     font-weight: 100;
@@ -120,7 +122,11 @@ body{
     -webkit-transition: ease-in-out 0.6s;
 }
 
-.display h1:nth-of-type(1):hover, .display h1:nth-of-type(2):hover, .display h1:nth-of-type(4):hover{
+.display h1:nth-of-type(1):hover{
+    letter-spacing: .105rem;
+}
+
+.display h1:nth-of-type(2):hover, .display h1:nth-of-type(4):hover{
     letter-spacing: .225rem;
 }
 
@@ -181,19 +187,33 @@ body{
 @media only screen and (max-width:768px){
     .container{
         width: 400px;
-        height: 500px;
+        height: 440px;
     }
     #input{
         width: 250px;
+    }
+    #time{
+        font-size: 1.2rem;
+    }
+    .display h1{
+        margin-bottom: 2.2rem;
+        font-size: 1.8rem;
     }
 }
 
 @media only screen and (max-width: 600px){
     .container{
         width: 330px;
-        height: 450px;
+        height: 440px;
     }
     #input{
         width: 210px;
+    }
+    #time{
+        font-size: 1rem;
+    }
+    .display h1{
+        margin-bottom: 2.7rem;
+        font-size: 1.7rem;
     }
 }

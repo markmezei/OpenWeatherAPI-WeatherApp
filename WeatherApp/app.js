@@ -67,22 +67,26 @@ const weatherData = (responseName, responseCountry, responseTemp, responseWeathe
 
 
 const showTime = (timezone) => {
+    const timezoneGMT = timezone/3600;
     clearInterval(dateInterval);
     time.style.animation = "fadeIn 0.8s ease-in forwards";
 
     const update = () => {
-        const currentTime = new Date(Date.now() + (timezone*1000));
-        //timezone*1000: 3600000
-        //Date.now(): 1675100632526
-        //Date.now() + (timezone * 1000): 1675104577810
-        //currentTime: Mon Jan 30 2023 19:44:36 GMT+0100 (közép-európai téli idő)
-        let hours = currentTime.getHours();
-        let minutes = currentTime.getMinutes();
-        let seconds = currentTime.getSeconds();
-        hours = (hours === 0) ? (hours = 23) : hours-1;
-        time.textContent = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        const localTime = new Date();
+        const utcTime = localTime.getTime() + (localTime.getTimezoneOffset()*60000);
+        const destinationTime = new Date(utcTime + (timezoneGMT*3600000));
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let year = destinationTime.getFullYear();
+        let month = months[destinationTime.getMonth()];
+        let day = destinationTime.getDate();
+        let hours = destinationTime.getHours();
+        let minutes = destinationTime.getMinutes();
+        let seconds = destinationTime.getSeconds();
+        
+        time.textContent = `${String(day).padStart(2, "0")} ${String(month).padStart(2, "0")} ${year} |
+        ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
     }
-    
     update();
     dateInterval = setInterval(update, 1000);
 }
