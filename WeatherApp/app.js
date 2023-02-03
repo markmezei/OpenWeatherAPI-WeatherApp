@@ -17,15 +17,14 @@ tempSelector.classList.add("tempSelectorButton");
 
 let dateInterval;
 
+
 const display = async () => {
     try{
         const config = {params: {q:input.value, appid: '450c822bc77c325d20d898180b7948ed', units: 'metric'}};
         const url = 'https://api.openweathermap.org/data/2.5/weather';
-        const currentWeather = await axios.get(url, config);
-
-        currentWeatherData(currentWeather.data.name, currentWeather.data.sys.country, currentWeather.data.main.temp, 
-            currentWeather.data.weather[0].main, currentWeather.data.weather[0].id, currentWeather.data.timezone);
-
+        const response = await axios.get(url, config);
+        weatherData(response.data.name, response.data.sys.country, response.data.main.temp, 
+            response.data.weather[0].main, response.data.weather[0].id, response.data.timezone);
     }catch(e){
         console.error(e);
         locationName.textContent = e.response.statusText;
@@ -37,7 +36,7 @@ const display = async () => {
 }
 
 
-const currentWeatherData = (responseName, responseCountry, responseTemp, responseWeather, responseID, responseTimezone) => {
+const weatherData = (responseName, responseCountry, responseTemp, responseWeather, responseID, responseTimezone) => {
     
     showTime(responseTimezone);
 
@@ -72,7 +71,7 @@ const showTime = (timezone) => {
     time.style.animation = "fadeIn 0.8s ease-in forwards";
 
     const update = () => {
-        const currentTime = new Date(Date.now() + (timezone * 1000));
+        const currentTime = new Date(Date.now() + (timezone*1000));
         //timezone*1000: 3600000
         //Date.now(): 1675100632526
         //Date.now() + (timezone * 1000): 1675104577810
@@ -83,7 +82,7 @@ const showTime = (timezone) => {
         hours = (hours === 0) ? (hours = 23) : hours-1;
         time.textContent = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
     }
-    //the update function executed before the interval, because then it removes 1s delay on the first display
+    
     update();
     dateInterval = setInterval(update, 1000);
 }

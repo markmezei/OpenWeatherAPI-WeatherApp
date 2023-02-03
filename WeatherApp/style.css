@@ -49,20 +49,22 @@ body{
 }
 
 
+
 .container{
     width: 650px;
-    height: 350px;
+    height: 380px;
     background: linear-gradient(to bottom,  rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
     background: -webkit-linear-gradient(to bottom,  rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
     transition: ease-in-out 0.7s 0.2s;
     -webkit-transition: ease-in-out 0.7s 0.2s;
 }
 
+
 .container:hover{
     transform: translateY(-1.2rem);
-    -webkit-transform: translateY(-1.2rem);
+    -webkit-transform: translateY(-2rem);
+    box-shadow: 0 0 1rem 0.5rem var(--white);
 }
-
 
 .search{
     display: flex;
@@ -79,6 +81,11 @@ body{
 
 #input:focus{
     outline: none;
+}
+
+#input::selection{
+    background-color: var(--black);
+    color: var(--white);
 }
 
 #search{
@@ -115,6 +122,10 @@ body{
 
 .display h1:nth-of-type(1):hover, .display h1:nth-of-type(2):hover, .display h1:nth-of-type(4):hover{
     letter-spacing: .225rem;
+}
+
+::selection{
+    color: rgba(255, 255, 255, 0.3);
 }
 
 #time{
@@ -164,4 +175,15 @@ body{
 .tempSelectorButton:hover{
     color: var(--black);
     background-color: var(--white);
+}
+
+
+@media only screen and (max-width:768px){
+    .container{
+        width: 450px;
+        height: 600px;
+    }
+    #input{
+        width: 300px;
+    }
 }
