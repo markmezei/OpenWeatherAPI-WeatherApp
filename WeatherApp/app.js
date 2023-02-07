@@ -180,6 +180,7 @@ window.addEventListener("keydown", (event) => {
         elements.forEach((element) => {
             element.textContent = "";
             input.value = "";
+            clearInterval(dateInterval);
         })
     }
 })
