@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/1d8561f7eb.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js" defer></script>
+    <title>OpenWeather API - Weather App</title>
+</head>
+<body>
+    <div class="container">
+        <img src="openweather-logo.png">
+        <div class="search">
+            <input type="text" id="input">
+            <button id="search"><i class="fa-solid fa-magnifying-glass fa-xl"></i></button>
+        </div>
+        <div class="display">
+            <h1 id="time"></h1>
+            <h1 id="locationName"></h1>
+            <h1 id="temp"></h1>
+            <h1 id="weather"></h1>
+        </div>
+    </div>
+</body>
+</html>
